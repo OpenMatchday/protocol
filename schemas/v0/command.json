@@ -1,0 +1,597 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "command.json",
+  "title": "Open Matchday command messages v0",
+  "description": "Idempotent operator commands for director, authority, and layout apply (AC-2.*, AC-3.9, AC-5.5).",
+  "$defs": {
+    "SetBusPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "bus",
+        "source_id"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid",
+          "description": "Client-supplied idempotency key (AC-5.5)"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "bus": {
+          "$ref": "common.json#/$defs/Bus"
+        },
+        "source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        }
+      }
+    },
+    "CutTakePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "action",
+        "preview_source_id",
+        "program_source_id"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "take"
+          ],
+          "description": "Explicit Cut/Take only; no silent auto-switch (AC-2.2)"
+        },
+        "preview_source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "program_source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        }
+      }
+    },
+    "SetAudioSourcePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "audio_source_id"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "audio_source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        }
+      }
+    },
+    "SetFieldPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "field",
+        "value",
+        "authority"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "field": {
+          "type": "string",
+          "enum": [
+            "clock",
+            "shot_clock",
+            "home_score",
+            "away_score",
+            "period",
+            "home_fouls",
+            "away_fouls"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "integer"
+          ],
+          "description": "Field value; sport package interprets units"
+        },
+        "authority": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "ocr_assisted"
+          ]
+        }
+      }
+    },
+    "ConfirmFieldPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "field",
+        "action"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "field": {
+          "type": "string",
+          "enum": [
+            "clock",
+            "shot_clock",
+            "home_score",
+            "away_score",
+            "period",
+            "home_fouls",
+            "away_fouls"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "confirm",
+            "correct",
+            "lock"
+          ]
+        },
+        "corrected_value": {
+          "type": [
+            "string",
+            "number",
+            "integer"
+          ]
+        }
+      }
+    },
+    "LayoutDraftPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "layout_id",
+        "layout"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "layout_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "layout": {
+          "$ref": "layout.json#/$defs/LayoutDocument"
+        }
+      }
+    },
+    "LayoutApplyPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "layout_id"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "layout_id": {
+          "$ref": "common.json#/$defs/Uuid",
+          "description": "Draft reaches air only via explicit apply (AC-3.9)"
+        }
+      }
+    },
+    "UndoPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_id",
+        "issued_by_device_id",
+        "target_event_id"
+      ],
+      "properties": {
+        "command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "issued_by_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "target_event_id": {
+          "$ref": "common.json#/$defs/Uuid",
+          "description": "Compensating undo references prior event id (AC-5.5)"
+        }
+      }
+    },
+    "CommandMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "message_id",
+        "session_id",
+        "sent_at",
+        "kind",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": {
+          "$ref": "common.json#/$defs/ProtocolVersion"
+        },
+        "message_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "correlation_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sender_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sent_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "command.set_bus",
+            "command.cut_take",
+            "command.set_audio_source",
+            "command.set_field",
+            "command.confirm_field",
+            "command.layout_draft",
+            "command.layout_apply",
+            "command.undo"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.set_bus"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/SetBusPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.cut_take"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/CutTakePayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.set_audio_source"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/SetAudioSourcePayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.set_field"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/SetFieldPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.confirm_field"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/ConfirmFieldPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.layout_draft"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/LayoutDraftPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.layout_apply"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/LayoutApplyPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "command.undo"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/UndoPayload"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_id",
+    "session_id",
+    "sent_at",
+    "kind",
+    "payload"
+  ],
+  "properties": {
+    "protocol_version": {
+      "$ref": "common.json#/$defs/ProtocolVersion"
+    },
+    "message_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "correlation_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "session_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sender_device_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sent_at": {
+      "$ref": "common.json#/$defs/IsoTimestamp"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "command.set_bus",
+        "command.cut_take",
+        "command.set_audio_source",
+        "command.set_field",
+        "command.confirm_field",
+        "command.layout_draft",
+        "command.layout_apply",
+        "command.undo"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.set_bus"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/SetBusPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.cut_take"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/CutTakePayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.set_audio_source"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/SetAudioSourcePayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.set_field"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/SetFieldPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.confirm_field"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/ConfirmFieldPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.layout_draft"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/LayoutDraftPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.layout_apply"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/LayoutApplyPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "command.undo"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/UndoPayload"
+          }
+        }
+      }
+    }
+  ]
+}

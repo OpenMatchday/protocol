@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "layout.json",
+  "title": "Open Matchday layout schemas v0",
+  "description": "Output layout document shapes including draft vs applied (AC-3.9, AC-3.10 message shapes).",
+  "$defs": {
+    "AspectRatio": {
+      "type": "string",
+      "enum": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ]
+    },
+    "NormalizedNumber": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "Anchor": {
+      "type": "string",
+      "enum": [
+        "top_left",
+        "top_center",
+        "top_right",
+        "center_left",
+        "center",
+        "center_right",
+        "bottom_left",
+        "bottom_center",
+        "bottom_right"
+      ]
+    },
+    "ScoreboardSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "graphic",
+            "live_crop"
+          ],
+          "description": "Reconstructed graphic or perspective-corrected live crop (AC-3.10)"
+        },
+        "crop_region_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        }
+      }
+    },
+    "LayoutItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "kind",
+        "anchor",
+        "x",
+        "y",
+        "w",
+        "h",
+        "z",
+        "aspect_lock"
+      ],
+      "properties": {
+        "item_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "scoreboard",
+            "clock",
+            "lineup",
+            "lower_third",
+            "sponsor",
+            "safe_area_guide",
+            "custom"
+          ]
+        },
+        "anchor": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "x": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "y": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "w": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "h": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "z": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "aspect_lock": {
+          "type": "boolean",
+          "description": "Aspect lock defaults on in UI; schema carries current state"
+        },
+        "scoreboard_source": {
+          "$ref": "#/$defs/ScoreboardSource"
+        }
+      }
+    },
+    "LayoutDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layout_id",
+        "aspect",
+        "state",
+        "items"
+      ],
+      "properties": {
+        "layout_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "output_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "aspect": {
+          "$ref": "#/$defs/AspectRatio"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "applied"
+          ],
+          "description": "Draft never reaches air until applied (AC-3.9)"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LayoutItem"
+          }
+        },
+        "preset_name": {
+          "type": "string",
+          "maxLength": 128
+        }
+      }
+    },
+    "LayoutMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "message_id",
+        "sent_at",
+        "kind",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": {
+          "$ref": "common.json#/$defs/ProtocolVersion"
+        },
+        "message_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "correlation_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sender_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sent_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "layout.document"
+          ]
+        },
+        "payload": {
+          "$ref": "#/$defs/LayoutDocument"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_id",
+    "sent_at",
+    "kind",
+    "payload"
+  ],
+  "properties": {
+    "protocol_version": {
+      "$ref": "common.json#/$defs/ProtocolVersion"
+    },
+    "message_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "correlation_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "session_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sender_device_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sent_at": {
+      "$ref": "common.json#/$defs/IsoTimestamp"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "layout.document"
+      ]
+    },
+    "payload": {
+      "$ref": "#/$defs/LayoutDocument"
+    }
+  }
+}

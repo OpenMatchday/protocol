@@ -1,0 +1,13 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-evt-bad-1",
+  "session_id": "sess-1",
+  "sent_at": "2026-11-09T09:12:00.000Z",
+  "kind": "event.record",
+  "payload": {
+    "event_id": "evt-bad",
+    "recorded_at": "2026-11-09T09:12:00.000Z",
+    "type": "field_updated",
+    "payload": {}
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "open-matchday-protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Versioned Open Matchday control-plane schemas and generated clients",
+  "scripts": {
+    "generate": "node scripts/generate-clients.mjs",
+    "check": "node scripts/check-schemas.mjs",
+    "test": "node --test test/schema.test.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "json-schema-to-typescript": "^15.0.4",
+    "typescript": "^5.9.3"
+  }
+}

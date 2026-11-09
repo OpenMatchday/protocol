@@ -1,0 +1,12 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-layout-bad-1",
+  "sent_at": "2026-11-09T09:09:00.000Z",
+  "kind": "layout.document",
+  "payload": {
+    "layout_id": "layout-bad",
+    "aspect": "4:3",
+    "state": "draft",
+    "items": []
+  }
+}

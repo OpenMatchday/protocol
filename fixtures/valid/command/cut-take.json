@@ -1,0 +1,15 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-cmd-1",
+  "session_id": "sess-1",
+  "sender_device_id": "dir-1",
+  "sent_at": "2026-11-09T09:10:00.000Z",
+  "kind": "command.cut_take",
+  "payload": {
+    "command_id": "cmd-cut-1",
+    "issued_by_device_id": "dir-1",
+    "action": "cut",
+    "preview_source_id": "cam-2",
+    "program_source_id": "cam-1"
+  }
+}

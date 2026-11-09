@@ -1,0 +1,20 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-evt-1",
+  "session_id": "sess-1",
+  "sender_device_id": "dir-1",
+  "sent_at": "2026-11-09T09:12:00.000Z",
+  "kind": "event.record",
+  "payload": {
+    "event_id": "evt-1",
+    "seq": 13,
+    "recorded_at": "2026-11-09T09:12:00.000Z",
+    "caused_by_command_id": "cmd-set-field-1",
+    "type": "field_updated",
+    "payload": {
+      "field": "home_score",
+      "value": 12,
+      "authority": "manual"
+    }
+  }
+}

@@ -1,0 +1,572 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session.json",
+  "title": "Open Matchday session messages v0",
+  "description": "Session join, role assign, health, and late-joiner snapshot shapes (AC-1.5, AC-2.7, AC-2.8, AC-5.5).",
+  "$defs": {
+    "DeviceMembership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "roles",
+        "approved"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "device_label": {
+          "$ref": "common.json#/$defs/NonEmptyString"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.json#/$defs/Role"
+          }
+        },
+        "approved": {
+          "type": "boolean"
+        },
+        "media_medium": {
+          "$ref": "common.json#/$defs/MediaMedium"
+        }
+      }
+    },
+    "SourceHealth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "state",
+        "observed_at"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "state": {
+          "$ref": "common.json#/$defs/HealthState"
+        },
+        "observed_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "detail": {
+          "type": "string",
+          "maxLength": 512
+        }
+      }
+    },
+    "CreatePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "session_id",
+        "director_device_id",
+        "event_label"
+      ],
+      "properties": {
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "director_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "event_label": {
+          "$ref": "common.json#/$defs/NonEmptyString"
+        }
+      }
+    },
+    "JoinRequestPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "requested_roles"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "requested_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.json#/$defs/Role"
+          }
+        }
+      }
+    },
+    "JoinGrantedPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "roles",
+        "director_approved"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.json#/$defs/Role"
+          }
+        },
+        "director_approved": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "RoleAssignPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "roles"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.json#/$defs/Role"
+          }
+        }
+      }
+    },
+    "LeavePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "reason"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "voluntary",
+            "director_removed",
+            "connection_lost"
+          ]
+        }
+      }
+    },
+    "SnapshotPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "session_id",
+        "snapshot_id",
+        "created_at",
+        "members",
+        "event_log_seq",
+        "preview_source_id",
+        "program_source_id"
+      ],
+      "properties": {
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "snapshot_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "created_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeviceMembership"
+          }
+        },
+        "event_log_seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "preview_source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "program_source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "audio_source_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "source_health": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceHealth"
+          }
+        },
+        "applied_layout_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.json#/$defs/Uuid"
+          }
+        }
+      }
+    },
+    "HealthPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sources"
+      ],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/SourceHealth"
+          }
+        },
+        "program_fallback": {
+          "type": "string",
+          "enum": [
+            "last_frame_freeze",
+            "slate",
+            "alternate_source"
+          ],
+          "description": "Configured safe state on source loss (AC-2.7 shape only)"
+        }
+      }
+    },
+    "SessionMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "message_id",
+        "session_id",
+        "sent_at",
+        "kind",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": {
+          "$ref": "common.json#/$defs/ProtocolVersion"
+        },
+        "message_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "correlation_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sender_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sent_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "session.create",
+            "session.join_request",
+            "session.join_granted",
+            "session.role_assign",
+            "session.leave",
+            "session.snapshot",
+            "session.health"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "session.create"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/CreatePayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "session.join_request"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/JoinRequestPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "session.join_granted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/JoinGrantedPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "session.role_assign"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/RoleAssignPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "session.leave"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/LeavePayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "session.snapshot"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/SnapshotPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "session.health"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/HealthPayload"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_id",
+    "session_id",
+    "sent_at",
+    "kind",
+    "payload"
+  ],
+  "properties": {
+    "protocol_version": {
+      "$ref": "common.json#/$defs/ProtocolVersion"
+    },
+    "message_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "correlation_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "session_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sender_device_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sent_at": {
+      "$ref": "common.json#/$defs/IsoTimestamp"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "session.create",
+        "session.join_request",
+        "session.join_granted",
+        "session.role_assign",
+        "session.leave",
+        "session.snapshot",
+        "session.health"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session.create"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/CreatePayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session.join_request"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/JoinRequestPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session.join_granted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/JoinGrantedPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session.role_assign"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/RoleAssignPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session.leave"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/LeavePayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session.snapshot"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/SnapshotPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session.health"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/HealthPayload"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-sess-bad-1",
+  "session_id": "sess-1",
+  "sent_at": "2026-11-09T09:01:00.000Z",
+  "kind": "session.join_granted",
+  "payload": {
+    "device_id": "cam-1",
+    "roles": ["camera"],
+    "director_approved": false
+  }
+}

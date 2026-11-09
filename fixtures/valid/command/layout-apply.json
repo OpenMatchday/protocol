@@ -1,0 +1,13 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-cmd-2",
+  "session_id": "sess-1",
+  "sender_device_id": "gfx-1",
+  "sent_at": "2026-11-09T09:11:00.000Z",
+  "kind": "command.layout_apply",
+  "payload": {
+    "command_id": "cmd-layout-apply-1",
+    "issued_by_device_id": "gfx-1",
+    "layout_id": "layout-main"
+  }
+}

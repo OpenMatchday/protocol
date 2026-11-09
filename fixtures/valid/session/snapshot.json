@@ -1,0 +1,40 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-sess-1",
+  "session_id": "sess-1",
+  "sender_device_id": "dir-1",
+  "sent_at": "2026-11-09T09:05:00.000Z",
+  "kind": "session.snapshot",
+  "payload": {
+    "session_id": "sess-1",
+    "snapshot_id": "snap-1",
+    "created_at": "2026-11-09T09:05:00.000Z",
+    "members": [
+      {
+        "device_id": "dir-1",
+        "device_label": "Director",
+        "roles": ["director"],
+        "approved": true
+      },
+      {
+        "device_id": "cam-1",
+        "device_label": "Camera A",
+        "roles": ["camera"],
+        "approved": true,
+        "media_medium": "wifi"
+      }
+    ],
+    "event_log_seq": 12,
+    "preview_source_id": "cam-1",
+    "program_source_id": "cam-1",
+    "audio_source_id": "cam-1",
+    "source_health": [
+      {
+        "source_id": "cam-1",
+        "state": "connected",
+        "observed_at": "2026-11-09T09:04:59.000Z"
+      }
+    ],
+    "applied_layout_ids": ["layout-main"]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-cmd-bad-1",
+  "session_id": "sess-1",
+  "sent_at": "2026-11-09T09:10:00.000Z",
+  "kind": "command.auto_switch",
+  "payload": {
+    "command_id": "cmd-bad",
+    "issued_by_device_id": "dir-1"
+  }
+}

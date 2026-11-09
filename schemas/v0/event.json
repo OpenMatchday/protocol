@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "event.json",
+  "title": "Open Matchday event log messages v0",
+  "description": "Append-only event log shapes with revisions and compensating undo (AC-5.5). No business logic.",
+  "$defs": {
+    "OcrReading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "value",
+        "confidence",
+        "captured_at",
+        "stale"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "clock",
+            "shot_clock",
+            "home_score",
+            "away_score",
+            "period",
+            "home_fouls",
+            "away_fouls"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "integer"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "captured_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "stale": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EventRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "seq",
+        "recorded_at",
+        "type",
+        "payload"
+      ],
+      "properties": {
+        "event_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Monotonic append-only sequence within the session"
+        },
+        "recorded_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "caused_by_command_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "revision_of": {
+          "$ref": "common.json#/$defs/Uuid",
+          "description": "Prior event_id when this record revises an earlier entry"
+        },
+        "compensates": {
+          "$ref": "common.json#/$defs/Uuid",
+          "description": "Target event_id for compensating undo"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "device_approved",
+            "role_assigned",
+            "field_updated",
+            "authority_changed",
+            "ocr_reading",
+            "cut_taken",
+            "layout_drafted",
+            "layout_applied",
+            "source_health",
+            "compensating_undo",
+            "snapshot_emitted"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        }
+      }
+    },
+    "EventBatchPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "events"
+      ],
+      "properties": {
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/EventRecord"
+          }
+        }
+      }
+    },
+    "EventMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "message_id",
+        "session_id",
+        "sent_at",
+        "kind",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": {
+          "$ref": "common.json#/$defs/ProtocolVersion"
+        },
+        "message_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "correlation_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sender_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sent_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "event.batch",
+            "event.record"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "event.batch"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/EventBatchPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "event.record"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/EventRecord"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_id",
+    "session_id",
+    "sent_at",
+    "kind",
+    "payload"
+  ],
+  "properties": {
+    "protocol_version": {
+      "$ref": "common.json#/$defs/ProtocolVersion"
+    },
+    "message_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "correlation_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "session_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sender_device_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sent_at": {
+      "$ref": "common.json#/$defs/IsoTimestamp"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "event.batch",
+        "event.record"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "event.batch"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/EventBatchPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "event.record"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/EventRecord"
+          }
+        }
+      }
+    }
+  ]
+}

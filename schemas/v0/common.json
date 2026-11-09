@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.json",
+  "title": "Open Matchday protocol common types v0",
+  "description": "Shared primitives for pairing, session, command, event, and layout messages. No business logic.",
+  "$defs": {
+    "ProtocolVersion": {
+      "type": "string",
+      "const": "0.1.0",
+      "description": "SemVer wire version for this schema set. MAJOR bumps break wire compatibility (REPOS.md)."
+    },
+    "NonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "Uuid": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9._:-]+$",
+      "description": "Opaque id string. Callers may use UUID; format is not required."
+    },
+    "IsoTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 / ISO-8601 timestamp"
+    },
+    "Role": {
+      "type": "string",
+      "enum": [
+        "director",
+        "camera",
+        "scoreboard_reader",
+        "event_operator",
+        "graphics_operator",
+        "social_operator",
+        "program_monitor"
+      ]
+    },
+    "ControlMedium": {
+      "type": "string",
+      "enum": ["ble", "qr", "manual_ip"],
+      "description": "Control-plane pairing medium only. Media never uses BLE."
+    },
+    "MediaMedium": {
+      "type": "string",
+      "enum": ["wifi", "ethernet"],
+      "description": "Media plane medium. Cellular and BLE are refused by schema."
+    },
+    "HealthState": {
+      "type": "string",
+      "enum": ["connected", "degraded", "lost"]
+    },
+    "Bus": {
+      "type": "string",
+      "enum": ["preview", "program"],
+      "description": "Director Preview or Program bus"
+    },
+    "MessageEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "message_id",
+        "sent_at",
+        "kind",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": { "$ref": "#/$defs/ProtocolVersion" },
+        "message_id": { "$ref": "#/$defs/Uuid" },
+        "correlation_id": { "$ref": "#/$defs/Uuid" },
+        "session_id": { "$ref": "#/$defs/Uuid" },
+        "sender_device_id": { "$ref": "#/$defs/Uuid" },
+        "sent_at": { "$ref": "#/$defs/IsoTimestamp" },
+        "kind": { "$ref": "#/$defs/NonEmptyString" },
+        "payload": {
+          "type": "object",
+          "description": "Kind-specific payload validated by the matching schema"
+        }
+      }
+    }
+  }
+}

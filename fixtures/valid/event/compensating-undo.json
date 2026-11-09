@@ -1,0 +1,19 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-evt-2",
+  "session_id": "sess-1",
+  "sender_device_id": "dir-1",
+  "sent_at": "2026-11-09T09:12:30.000Z",
+  "kind": "event.record",
+  "payload": {
+    "event_id": "evt-2",
+    "seq": 14,
+    "recorded_at": "2026-11-09T09:12:30.000Z",
+    "caused_by_command_id": "cmd-undo-1",
+    "compensates": "evt-1",
+    "type": "compensating_undo",
+    "payload": {
+      "target_event_id": "evt-1"
+    }
+  }
+}

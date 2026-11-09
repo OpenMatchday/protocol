@@ -1,0 +1,496 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pairing.json",
+  "title": "Open Matchday pairing messages v0",
+  "description": "Control-plane pairing shapes for AC-1.1–AC-1.4. No business logic.",
+  "$defs": {
+    "AdvertisePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "device_label",
+        "supported_roles",
+        "control_medium"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "device_label": {
+          "$ref": "common.json#/$defs/NonEmptyString"
+        },
+        "supported_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.json#/$defs/Role"
+          }
+        },
+        "control_medium": {
+          "$ref": "common.json#/$defs/ControlMedium"
+        },
+        "ble_advertising": {
+          "type": "boolean",
+          "description": "True only when BLE discovery is active on a matrix-supported platform"
+        }
+      }
+    },
+    "OfferPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "offer_id",
+        "director_device_id",
+        "control_medium",
+        "control_endpoint"
+      ],
+      "properties": {
+        "offer_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "director_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "control_medium": {
+          "type": "string",
+          "enum": [
+            "qr",
+            "manual_ip"
+          ],
+          "description": "QR and manual IP are always available (AC-1.2)"
+        },
+        "control_endpoint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "host",
+            "port"
+          ],
+          "properties": {
+            "host": {
+              "$ref": "common.json#/$defs/NonEmptyString"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            }
+          }
+        },
+        "expires_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        }
+      }
+    },
+    "RequestPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "device_id",
+        "device_label",
+        "requested_roles",
+        "control_medium",
+        "media_medium"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "offer_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "device_label": {
+          "$ref": "common.json#/$defs/NonEmptyString"
+        },
+        "requested_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.json#/$defs/Role"
+          }
+        },
+        "control_medium": {
+          "$ref": "common.json#/$defs/ControlMedium"
+        },
+        "media_medium": {
+          "$ref": "common.json#/$defs/MediaMedium"
+        }
+      }
+    },
+    "ApprovePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "device_id",
+        "approved_roles",
+        "approved_by_director"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "approved_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.json#/$defs/Role"
+          }
+        },
+        "approved_by_director": {
+          "type": "boolean",
+          "const": true,
+          "description": "Director explicit approval required (AC-1.4)"
+        },
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        }
+      }
+    },
+    "RejectPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "device_id",
+        "reason"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "director_rejected",
+            "expired",
+            "capacity",
+            "unsupported_medium"
+          ]
+        }
+      }
+    },
+    "AckPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "device_id",
+        "status"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "joined",
+            "pending_approval"
+          ]
+        }
+      }
+    },
+    "PairingMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "message_id",
+        "sent_at",
+        "kind",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": {
+          "$ref": "common.json#/$defs/ProtocolVersion"
+        },
+        "message_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "correlation_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sender_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sent_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "pairing.advertise",
+            "pairing.offer",
+            "pairing.request",
+            "pairing.approve",
+            "pairing.reject",
+            "pairing.ack"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "pairing.advertise"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/AdvertisePayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "pairing.offer"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/OfferPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "pairing.request"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/RequestPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "pairing.approve"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/ApprovePayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "pairing.reject"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/RejectPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "pairing.ack"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/AckPayload"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_id",
+    "sent_at",
+    "kind",
+    "payload"
+  ],
+  "properties": {
+    "protocol_version": {
+      "$ref": "common.json#/$defs/ProtocolVersion"
+    },
+    "message_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "correlation_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "session_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sender_device_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sent_at": {
+      "$ref": "common.json#/$defs/IsoTimestamp"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "pairing.advertise",
+        "pairing.offer",
+        "pairing.request",
+        "pairing.approve",
+        "pairing.reject",
+        "pairing.ack"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "pairing.advertise"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/AdvertisePayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "pairing.offer"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/OfferPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "pairing.request"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/RequestPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "pairing.approve"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/ApprovePayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "pairing.reject"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/RejectPayload"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "pairing.ack"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/AckPayload"
+          }
+        }
+      }
+    }
+  ]
+}

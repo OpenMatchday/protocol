@@ -1,0 +1,27 @@
+{
+  "protocol_version": "0.1.0",
+  "dialect": "https://json-schema.org/draft/2020-12/schema",
+  "schemas": [
+    "common.json",
+    "layout.json",
+    "pairing.json",
+    "session.json",
+    "event.json",
+    "command.json"
+  ],
+  "message_schemas": [
+    "pairing.json",
+    "session.json",
+    "command.json",
+    "event.json",
+    "layout.json"
+  ],
+  "clients": [
+    "typescript"
+  ],
+  "semver_policy": "MAJOR for breaking wire changes (REPOS.md)",
+  "sources": {
+    "json_schema": "https://json-schema.org/draft/2020-12/schema",
+    "semver": "https://semver.org/"
+  }
+}
