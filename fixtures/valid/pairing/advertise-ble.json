@@ -1,0 +1,14 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-adv-ble-1",
+  "sender_device_id": "cam-1",
+  "sent_at": "2026-11-09T09:00:00.000Z",
+  "kind": "pairing.advertise",
+  "payload": {
+    "device_id": "cam-1",
+    "device_label": "Camera A",
+    "supported_roles": ["camera"],
+    "control_medium": "ble",
+    "ble_advertising": true
+  }
+}

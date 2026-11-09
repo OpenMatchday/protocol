@@ -1,0 +1,14 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-pair-bad-approve",
+  "session_id": "sess-1",
+  "sender_device_id": "dir-1",
+  "sent_at": "2026-11-09T09:00:01.000Z",
+  "kind": "pairing.approve",
+  "payload": {
+    "request_id": "req-1",
+    "device_id": "cam-1",
+    "approved_roles": ["camera"],
+    "approved_by_director": false
+  }
+}

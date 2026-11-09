@@ -1,0 +1,14 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-pair-bad-ble",
+  "sent_at": "2026-11-09T09:00:00.000Z",
+  "kind": "pairing.request",
+  "payload": {
+    "request_id": "req-bad-ble",
+    "device_id": "cam-1",
+    "device_label": "Camera A",
+    "requested_roles": ["camera"],
+    "control_medium": "qr",
+    "media_medium": "ble"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-offer-qr-1",
+  "sender_device_id": "dir-1",
+  "sent_at": "2026-11-09T09:00:00.000Z",
+  "kind": "pairing.offer",
+  "payload": {
+    "offer_id": "offer-qr-1",
+    "director_device_id": "dir-1",
+    "control_medium": "qr",
+    "control_endpoint": {
+      "host": "192.168.1.10",
+      "port": 7400
+    },
+    "expires_at": "2026-11-09T09:05:00.000Z"
+  }
+}

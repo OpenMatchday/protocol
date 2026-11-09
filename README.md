@@ -14,7 +14,7 @@ Dialect: [JSON Schema 2020-12](https://json-schema.org/draft/2020-12/schema).
 
 | File | Covers |
 |---|---|
-| `schemas/v0/pairing.json` | AC-1.1–AC-1.4 pairing shapes |
+| `schemas/v0/pairing.json` | AC-1.1–AC-1.4 pairing shapes (QR/manual offers; media wifi/ethernet only; `approved_by_director: true`) |
 | `schemas/v0/session.json` | AC-1.5 roles, AC-2.7/2.8 health, AC-5.5 snapshots |
 | `schemas/v0/command.json` | AC-2.* director commands, AC-3.9 layout apply, AC-5.5 idempotency/undo |
 | `schemas/v0/event.json` | AC-5.5 append-only event log |
