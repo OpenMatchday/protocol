@@ -1,0 +1,33 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-layout-linked-1",
+  "session_id": "sess-1",
+  "sender_device_id": "gfx-1",
+  "sent_at": "2026-11-10T17:00:00.000Z",
+  "kind": "layout.document",
+  "payload": {
+    "layout_id": "layout-linked-16x9",
+    "output_id": "out-16x9",
+    "aspect": "16:9",
+    "state": "draft",
+    "scene_id": "scene-shared",
+    "items": [
+      {
+        "item_id": "item-scorebug",
+        "kind": "scoreboard",
+        "anchor": "top_left",
+        "x": 0.02,
+        "y": 0.02,
+        "w": 0.28,
+        "h": 0.12,
+        "z": 10,
+        "aspect_lock": true,
+        "scoreboard_source": {
+          "mode": "live_crop",
+          "crop_region_id": "region-board-1"
+        }
+      }
+    ],
+    "preset_name": "linked-widescreen"
+  }
+}
