@@ -103,6 +103,20 @@ export interface SourceHealth {
 }
 /**
  * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "FieldState".
+ */
+export interface FieldState {
+  field: "clock" | "shot_clock" | "home_score" | "away_score" | "period" | "home_fouls" | "away_fouls"
+  value: string | number
+  /**
+   * Per-field authority mode (AC-5.1 / AC-5.3). Clock defaults to manual.
+   */
+  authority: "manual" | "ocr_assisted"
+  confirmed: boolean
+  locked: boolean
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
  * via the `definition` "CreatePayload".
  */
 export interface CreatePayload {
@@ -260,6 +274,10 @@ export interface SnapshotPayload {
   audio_source_id?: string
   source_health?: SourceHealth[]
   applied_layout_ids?: string[]
+  /**
+   * Confirmed field authority state for late joiners (AC-5.5)
+   */
+  fields?: FieldState[]
 }
 /**
  * This interface was referenced by `undefined`'s JSON-Schema

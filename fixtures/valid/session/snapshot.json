@@ -35,6 +35,22 @@
         "observed_at": "2026-11-09T09:04:59.000Z"
       }
     ],
-    "applied_layout_ids": ["layout-main"]
+    "applied_layout_ids": ["layout-main"],
+    "fields": [
+      {
+        "field": "clock",
+        "value": "10:00",
+        "authority": "manual",
+        "confirmed": true,
+        "locked": false
+      },
+      {
+        "field": "home_score",
+        "value": 12,
+        "authority": "manual",
+        "confirmed": true,
+        "locked": false
+      }
+    ]
   }
 }

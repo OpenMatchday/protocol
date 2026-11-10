@@ -59,6 +59,52 @@
         }
       }
     },
+    "FieldState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "value",
+        "authority",
+        "confirmed",
+        "locked"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "clock",
+            "shot_clock",
+            "home_score",
+            "away_score",
+            "period",
+            "home_fouls",
+            "away_fouls"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "integer"
+          ]
+        },
+        "authority": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "ocr_assisted"
+          ],
+          "description": "Per-field authority mode (AC-5.1 / AC-5.3). Clock defaults to manual."
+        },
+        "confirmed": {
+          "type": "boolean"
+        },
+        "locked": {
+          "type": "boolean"
+        }
+      }
+    },
     "CreatePayload": {
       "type": "object",
       "additionalProperties": false,
@@ -219,6 +265,13 @@
           "type": "array",
           "items": {
             "$ref": "common.json#/$defs/Uuid"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "description": "Confirmed field authority state for late joiners (AC-5.5)",
+          "items": {
+            "$ref": "#/$defs/FieldState"
           }
         }
       }
