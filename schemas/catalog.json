@@ -4,6 +4,7 @@
   "schemas": [
     "common.json",
     "layout.json",
+    "scene.json",
     "pairing.json",
     "session.json",
     "event.json",
@@ -14,7 +15,8 @@
     "session.json",
     "command.json",
     "event.json",
-    "layout.json"
+    "layout.json",
+    "scene.json"
   ],
   "clients": [
     "typescript"

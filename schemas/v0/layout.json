@@ -76,10 +76,18 @@
             "clock",
             "lineup",
             "lower_third",
+            "substitution",
+            "summary",
             "sponsor",
+            "social_card",
             "safe_area_guide",
             "custom"
-          ]
+          ],
+          "description": "Layout item kinds aligned with AC-8.1 graphic types plus guides/custom"
+        },
+        "template_id": {
+          "$ref": "common.json#/$defs/Uuid",
+          "description": "Optional graphics template id resolved by the renderer"
         },
         "anchor": {
           "$ref": "#/$defs/Anchor"
@@ -145,6 +153,10 @@
         "preset_name": {
           "type": "string",
           "maxLength": 128
+        },
+        "scene_id": {
+          "$ref": "common.json#/$defs/Uuid",
+          "description": "Optional shared scene link (AC-3.2); independent copy requires explicit action"
         }
       }
     },

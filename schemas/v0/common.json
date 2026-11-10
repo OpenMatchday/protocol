@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "common.json",
   "title": "Open Matchday protocol common types v0",
-  "description": "Shared primitives for pairing, session, command, event, and layout messages. No business logic.",
+  "description": "Shared primitives for pairing, session, command, event, layout, and scene messages. No business logic.",
   "$defs": {
     "ProtocolVersion": {
       "type": "string",

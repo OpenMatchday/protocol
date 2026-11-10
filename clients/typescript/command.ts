@@ -185,6 +185,10 @@ export interface LayoutDocument {
   state: "draft" | "applied"
   items: LayoutItem[]
   preset_name?: string
+  /**
+   * Opaque id string. Callers may use UUID; format is not required.
+   */
+  scene_id?: string
   minItems?: 0
 }
 export interface LayoutItem {
@@ -192,7 +196,24 @@ export interface LayoutItem {
    * Opaque id string. Callers may use UUID; format is not required.
    */
   item_id: string
-  kind: "scoreboard" | "clock" | "lineup" | "lower_third" | "sponsor" | "safe_area_guide" | "custom"
+  /**
+   * Layout item kinds aligned with AC-8.1 graphic types plus guides/custom
+   */
+  kind:
+    | "scoreboard"
+    | "clock"
+    | "lineup"
+    | "lower_third"
+    | "substitution"
+    | "summary"
+    | "sponsor"
+    | "social_card"
+    | "safe_area_guide"
+    | "custom"
+  /**
+   * Opaque id string. Callers may use UUID; format is not required.
+   */
+  template_id?: string
   anchor:
     | "top_left"
     | "top_center"

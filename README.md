@@ -1,6 +1,6 @@
 # Open Matchday -- protocol
 
-Versioned pairing, session, command, event, and layout schemas with generated TypeScript clients.
+Versioned pairing, session, command, event, layout, and scene schemas with generated TypeScript clients.
 
 Part of the [OpenMatchday](https://github.com/OpenMatchday) organization.
 
@@ -18,7 +18,8 @@ Dialect: [JSON Schema 2020-12](https://json-schema.org/draft/2020-12/schema).
 | `schemas/v0/session.json` | AC-1.5 roles, AC-2.7/2.8 health, AC-5.5 snapshots (`fields` / FieldState) |
 | `schemas/v0/command.json` | AC-2.* director commands, AC-3.9 layout apply, AC-5.5 idempotency/undo |
 | `schemas/v0/event.json` | AC-5.5 append-only event log |
-| `schemas/v0/layout.json` | AC-3.9 draft/applied layout documents, AC-3.10 scoreboard source |
+| `schemas/v0/layout.json` | AC-3.9 draft/applied layout documents, AC-3.10 scoreboard source; AC-8.1 item kinds; optional `scene_id` (AC-3.2) |
+| `schemas/v0/scene.json` | Shared scene documents for linked layouts (AC-3.2) and AC-8.1 template instances |
 
 Catalog: `schemas/catalog.json`. This repository contains schemas and generated clients only — no business logic.
 

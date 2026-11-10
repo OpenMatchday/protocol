@@ -3,10 +3,11 @@
 /* Protocol version 0.1.0 */
 export const PROTOCOL_VERSION = "0.1.0" as const
 
-export type ProtocolSchemaId = "pairing.json" | "session.json" | "command.json" | "event.json" | "layout.json"
+export type ProtocolSchemaId = "pairing.json" | "session.json" | "command.json" | "event.json" | "layout.json" | "scene.json"
 
 export * as Common from "./common.js"
 export * as Layout from "./layout.js"
+export * as Scene from "./scene.js"
 export * as Pairing from "./pairing.js"
 export * as Session from "./session.js"
 export * as Event from "./event.js"

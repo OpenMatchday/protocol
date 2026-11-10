@@ -11,6 +11,7 @@ export const PROTOCOL_VERSION = "0.1.0"
 const SCHEMA_ORDER = [
   "common.json",
   "layout.json",
+  "scene.json",
   "pairing.json",
   "session.json",
   "event.json",
@@ -23,6 +24,7 @@ export const MESSAGE_SCHEMAS = [
   "command.json",
   "event.json",
   "layout.json",
+  "scene.json",
 ]
 
 export const loadSchemaFiles = () => {

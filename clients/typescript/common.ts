@@ -61,7 +61,7 @@ export type HealthState = "connected" | "degraded" | "lost"
 export type Bus = "preview" | "program"
 
 /**
- * Shared primitives for pairing, session, command, event, and layout messages. No business logic.
+ * Shared primitives for pairing, session, command, event, layout, and scene messages. No business logic.
  */
 export interface OpenMatchdayProtocolCommonTypesV0 {
   [k: string]: unknown

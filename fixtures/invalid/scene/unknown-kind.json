@@ -1,0 +1,12 @@
+{
+  "protocol_version": "0.1.0",
+  "message_id": "msg-scene-bad",
+  "sent_at": "2026-11-10T17:00:00.000Z",
+  "kind": "scene.unknown",
+  "payload": {
+    "scene_id": "scene-bad",
+    "name": "bad",
+    "aspect": "16:9",
+    "instances": []
+  }
+}

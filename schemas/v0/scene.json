@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scene.json",
+  "title": "Open Matchday scene schemas v0",
+  "description": "Shared scene document shapes for linked layouts (AC-3.2) and graphics instances (AC-8.1 message shapes).",
+  "$defs": {
+    "AspectRatio": {
+      "type": "string",
+      "enum": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ]
+    },
+    "NormalizedNumber": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "Anchor": {
+      "type": "string",
+      "enum": [
+        "top_left",
+        "top_center",
+        "top_right",
+        "center_left",
+        "center",
+        "center_right",
+        "bottom_left",
+        "bottom_center",
+        "bottom_right"
+      ]
+    },
+    "TemplateKind": {
+      "type": "string",
+      "enum": [
+        "scorebug",
+        "clocks",
+        "lineups",
+        "lower_thirds",
+        "substitutions",
+        "summaries",
+        "sponsor_panels",
+        "social_cards"
+      ],
+      "description": "AC-8.1 graphic template kinds"
+    },
+    "BindingValue": {
+      "type": "string",
+      "maxLength": 512
+    },
+    "SceneInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instance_id",
+        "template_id",
+        "template_kind",
+        "anchor",
+        "x",
+        "y",
+        "w",
+        "h",
+        "z"
+      ],
+      "properties": {
+        "instance_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "template_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "template_kind": {
+          "$ref": "#/$defs/TemplateKind"
+        },
+        "anchor": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "x": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "y": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "w": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "h": {
+          "$ref": "#/$defs/NormalizedNumber"
+        },
+        "z": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bindings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/BindingValue"
+          }
+        }
+      }
+    },
+    "SceneDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scene_id",
+        "name",
+        "aspect",
+        "instances"
+      ],
+      "properties": {
+        "scene_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "aspect": {
+          "$ref": "#/$defs/AspectRatio"
+        },
+        "instances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneInstance"
+          }
+        }
+      }
+    },
+    "SceneMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "message_id",
+        "sent_at",
+        "kind",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": {
+          "$ref": "common.json#/$defs/ProtocolVersion"
+        },
+        "message_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "correlation_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "session_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sender_device_id": {
+          "$ref": "common.json#/$defs/Uuid"
+        },
+        "sent_at": {
+          "$ref": "common.json#/$defs/IsoTimestamp"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "scene.document"
+          ]
+        },
+        "payload": {
+          "$ref": "#/$defs/SceneDocument"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "message_id",
+    "sent_at",
+    "kind",
+    "payload"
+  ],
+  "properties": {
+    "protocol_version": {
+      "$ref": "common.json#/$defs/ProtocolVersion"
+    },
+    "message_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "correlation_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "session_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sender_device_id": {
+      "$ref": "common.json#/$defs/Uuid"
+    },
+    "sent_at": {
+      "$ref": "common.json#/$defs/IsoTimestamp"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "scene.document"
+      ]
+    },
+    "payload": {
+      "$ref": "#/$defs/SceneDocument"
+    }
+  }
+}

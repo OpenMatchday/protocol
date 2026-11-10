@@ -73,6 +73,10 @@ export interface LayoutDocument {
   state: "draft" | "applied"
   items: LayoutItem[]
   preset_name?: string
+  /**
+   * Opaque id string. Callers may use UUID; format is not required.
+   */
+  scene_id?: string
 }
 /**
  * This interface was referenced by `OpenMatchdayLayoutSchemasV0`'s JSON-Schema
@@ -83,7 +87,24 @@ export interface LayoutItem {
    * Opaque id string. Callers may use UUID; format is not required.
    */
   item_id: string
-  kind: "scoreboard" | "clock" | "lineup" | "lower_third" | "sponsor" | "safe_area_guide" | "custom"
+  /**
+   * Layout item kinds aligned with AC-8.1 graphic types plus guides/custom
+   */
+  kind:
+    | "scoreboard"
+    | "clock"
+    | "lineup"
+    | "lower_third"
+    | "substitution"
+    | "summary"
+    | "sponsor"
+    | "social_card"
+    | "safe_area_guide"
+    | "custom"
+  /**
+   * Opaque id string. Callers may use UUID; format is not required.
+   */
+  template_id?: string
   anchor: Anchor
   x: NormalizedNumber
   y: NormalizedNumber
